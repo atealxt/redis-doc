@@ -19,6 +19,7 @@ Redis启动可以不指定配置文件而使用内置默认配置，但仅推荐
 
 配置指令的列表，以及它们的意义和用法请见例子文件redis.conf，其已包含了Redis分布式方面的信息。
 
+* 自文档 [Redis 3.0的redis.conf](https://raw.githubusercontent.com/antirez/redis/3.0/redis.conf)
 * 自文档 [Redis 2.8的redis.conf](https://raw.githubusercontent.com/antirez/redis/2.8/redis.conf)
 * 自文档 [Redis 2.6的redis.conf](https://raw.githubusercontent.com/antirez/redis/2.6/redis.conf)
 * 自文档 [Redis 2.4的redis.conf](https://raw.githubusercontent.com/antirez/redis/2.4/redis.conf)
