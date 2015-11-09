@@ -9,7 +9,7 @@ Redis安装提示
 
 + 建议使用 **Linux操作系统** 进行部署。在OS X下我们也对Redis进行了非常多的测试，并在FreeBSD和OpenBSD下进行了一定程度的测试。然而所有主要的压力测试都是在Linux下进行的，确保了该系统下绝大多数生产部署的正常工作。
 + 请确认Linux内核的 **overcommit内存设置为1** 。添加 `vm.overcommit_memory = 1` 至 `/etc/sysctl.conf` 之后重启，或执行立即生效的命令 `sysctl vm.overcommit_memory=1` 。
-* 请确认禁用Linux内核的 *巨大页透明化* 功能，它会严重影响内存的使用并带来延迟。通过这个命令来禁用： `echo never > sys/kernel/mm/transparent_hugepage/enabled` 。
+* 请确认禁用Linux内核的 *巨大页透明化* 功能，它会严重影响内存的使用并带来延迟。通过这个命令来禁用： `echo never > /sys/kernel/mm/transparent_hugepage/enabled` 。
 + 请确认为系统 **提供一些交换空间**（建议大小和内存一样）。如果Linux没有交换空间并且Redis实例瞬间消耗了太多内存，Redis将因内存溢出而崩溃，或者Linux内核的OOM killer将杀掉Redis进程。
 + Set an explicit `maxmemory` option limit in your instance in order to make sure that the instance will report errors instead of failing when the system memory limit is near to be reached.
 + 如果把Redis用于写操作密集应用程序中，当保存RDB文件至磁盘或重写AOF日志时 **Redis可能会使用最多2倍于普通的内存空间消耗** 。内存的额外消耗量与在保存进程中修改的内存页数量成正比，通常与此过程中访问过的键的数量（或类型项目总数）成正比。请确认并分配相应的内存。
