@@ -1,4 +1,4 @@
-# Redis documentation
+# Redis documentation [中文点我](README_ZH.md)
 
 ## Clients
 
