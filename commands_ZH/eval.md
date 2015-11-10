@@ -250,32 +250,37 @@ Redis实例保证对执行过的脚本进行 **永久性** 缓存。
     SCRIPT KILL命令只应该被用在那些执行过程中不会对数据进行修改的脚本（停止一个只读脚本不会违反脚本引擎所担保的原子性）。
     更多关于长执行时间脚本的信息请见下一节。
 
-## 把Scripts作为纯函数
+## 脚本即函数
 
 编写纯函数脚本是脚本一个非常重要的部分。
-在Redis实例中执行的脚本会通过发送脚本本身复制到从服务器 -- 而不是一个个的命令。
-同样的情况发生在只可追加文件中。
-给一个Redis实例发送脚本远比发送多条命令要快，所以如果客户端向主服务器发送很多零散的命令脚本的话，主服务器再把一个个脚本转换成命令，与从服务器交互或存入只可追加文件AOF，会占用过多的带宽流量（同样，在网络传递中进行单个命令调度需要做比通过Lua脚本调度更多的工作，也会引消耗过多的CPU资源）。
+在Redis实例中执行的脚本默认会通过发送脚本自身 -- 而不是一个个的命令，复制到从服务器和AOF文件中。
 
-这种方法唯一的缺陷是脚本需要如下条件：
+给一个Redis实例发送脚本通常比发送多条命令要快得多，所以如果客户端向主服务器发送很多零散的命令脚本的话，主服务器再把一个个脚本转换成命令，与从服务器交互或存入只可追加文件AOF，会占用过多的带宽流量（同样，在网络传递中进行单个命令调度需要做比通过Lua脚本调度更多的工作，也会引消耗过多的CPU资源）。
 
-* 针对相同的参数、相同的输入数据集，脚本总是执行相同的Redis _写_ 命令。
+通常可以用复制脚本代替脚本执行的语句，但并不总能这样。
+所以从Redis 3.2 开始（目前还不是稳定版），脚本引擎可以从执行的脚本中提取写操作序列进行复制，来代替复制脚本自身。
+更多信息见下面的章节。
+在此章节我们假设脚本以全量脚本进行复制，称之为 **全量脚本复制** 。
+
+这种 *全量脚本复制* 方法主要的缺陷是脚本需要满足如下条件：
+
+* 针对相同的参数、相同的输入数据集，脚本必须总是执行相同的Redis _写_ 命令。
   执行脚本操作不能依赖任何隐藏（非显式）信息，不能依赖在脚本执行过程中或不同的脚本执行之间可能带来的状态改变，也不能依赖任何外部I/O设备的输入。
 
 一些像使用系统时间、调用Redis随机命令如 `RANDOMKEY` 、或使用Lua随机数产生器，都可能导致脚本不是总能执行相同的行为。
 
 为了避免这些问题Redis做了如下处理：
 
-*   Lua不执行访问系统时间或其他外部状态的命令。
+* Lua不执行访问系统时间或其他外部状态的命令。
 
-*   如果脚本在执行了Redis _随机_ 命令如 `RANDOMKEY` 、 `SRANDMEMBER` 、 `TIME` 后，又欲调用可以改变数据集的Redis命令，Redis会终止脚本执行并返回错误。
+* 如果脚本在执行了Redis _随机_ 命令如 `RANDOMKEY` 、 `SRANDMEMBER` 、 `TIME` 后，又欲调用可以改变数据集的Redis命令，Redis会终止脚本执行并返回错误。
     这意味着如果脚本只进行只读操作，并不修改数据集的话，这些命令是可以自由使用的。
     注意 _随机命令_ 并不一定是随机数命令：任何具有不确定性的命令都被认为是随机命令（在这点上 `TIME` 命令就是最好的例子）。
 
-*   以随机顺序返回元素的Redis命令如 `SMEMBERS` （因为Redis的集合是 _无序的_ ），在被Lua调用时有着不同于普通调用的行为，会在返回数据给Lua脚本前自动做一次词典排序。
+* 以随机顺序返回元素的Redis命令如 `SMEMBERS` （因为Redis的集合是 _无序的_ ），在被Lua调用时有着不同于普通调用的行为，会在返回数据给Lua脚本前自动做一次词典排序。
     正由于这样 `redis.call("smembers",KEYS[1])` 总会返回相同顺序的元素，而相同的命令使用普通客户端调用则可能返回不同的结果，即使键包含着完全相同的元素。
 
-*   修改了Lua的伪随机数生成函数 `math.random` 和 `math.randomseed` ，使得每次新脚本的执行都使用相同的种子。
+* 修改了Lua的伪随机数生成函数 `math.random` 和 `math.randomseed` ，使得每次新脚本的执行都使用相同的种子。
     这意味着每次执行脚本时如果不使用 `math.randomseed` ，调用 `math.random` 总是会生成相同的序数。
 
 而用户仍然可以通过以下简单的方法编写具有随机特性的命令。
@@ -345,7 +350,83 @@ puts r.eval(RandomPushScript,1,:mylist,10,rand(2**32))
 注意：此特性的重要一点是Redis用 `math.random` 和 `math.randomseed` 实现的伪随机数生成器，无论Redis运行在何种架构的系统中都会有着同样的输出。
 32位、64位、大端法和小端法的系统都将产生相同的输出。
 
-## 全局变量防护措施
+## 使用命令代替脚本进行复制
+
+从Redis 3.2 开始（目前还不是稳定版）可以选择另一种复制方法。
+我们可以只复制脚本生成的单条写命令以替代全量脚本复制，称之为 **脚本效果复制** 。
+
+在此复制模式下，当Lua脚本执行，Redis会收集所有Lua脚本引擎执行的修改数据集的命令。
+当脚本执行完成后，脚本生成的命令序列将会以 MULTI / EXEC 事务的形式发送至从服务及AOF中。
+
+这在个别场合中会比较有用：
+
+* When the script is slow to compute, but the effects can be summarized by
+a few write commands, it is a shame to re-compute the script on the slaves
+or when reloading the AOF. In this case to replicate just the effect of the
+script is much better.
+* When 脚本效果复制 is enabled, the controls about non
+deterministic functions are disabled. You can, for example, use the `TIME`
+or `SRANDMEMBER` commands inside your scripts freely at any place.
+* The Lua PRNG in this mode is seeded randomly at every call.
+
+In order to enable 脚本效果复制, you need to issue the
+following Lua command before any write operated by the script:
+
+    redis.replicate_commands();
+
+The function returns true if the 脚本效果复制 was enabled,
+otherwise if the function was called after the script already called
+some write command, it returns false, and normal whole script replication
+is used.
+
+## Selective replication of commands
+
+When 脚本效果复制 is selected (see the previous section), it
+is possible to have more control in the way commands are replicated to slaves
+and AOF. This is a very advanced feature since **a misuse can do damage** by
+breaking the contract that the master, slaves, and AOF, all must contain the
+same logical content.
+
+However this is a useful feature since, sometimes, we need to execute certain
+commands only in the master in order to create, for example, intermediate
+values.
+
+Think at a Lua script where we perform an intersection between two sets.
+Pick five random elements, and create a new set with this five random
+elements. Finally we delete the temporary key representing the intersection
+between the two original sets. What we want to replicate is only the creation
+of the new set with the five elements. It's not useful to also replicate the
+commands creating the temporary key.
+
+For this reason, Redis 3.2 introduces a new command that only works when
+脚本效果复制 is enabled, and is able to control the scripting
+replication engine. The command is called `redis.set_repl()` and fails raising
+an error if called when 脚本效果复制 is disabled.
+
+The command can be called with four different arguments:
+
+    redis.set_repl(redis.REPL_ALL); -- Replicte to AOF and slaves.
+    redis.set_repl(redis.REPL_AOF); -- Replicte only to AOF.
+    redis.set_repl(redis.REPL_SLAVE); -- Replicte only to slaves.
+    redis.set_repl(redis.REPL_NONE); -- Don't replicate at all.
+
+By default the scripting engine is always set to `REPL_ALL`. By calling
+this function the user can switch on/off AOF and or slaves replication, and
+turn them back later at her/his wish.
+
+A simple example follows:
+
+    redis.replicate_commands(); -- Enable effects replication.
+    redis.call('set','A','1');
+    redis.set_repl(redis.REPL_NONE);
+    redis.call('set','B','2');
+    redis.set_repl(redis.REPL_ALL);
+    redis.call('set','C','3');
+
+After running the above script, the result is that only keys A and C
+will be created on slaves and AOF.
+
+## 保护全局变量
 
 为了防止数据泄漏至Lua中，Redis脚本不允许创建全局变量。
 如果脚本需要在调用时维护状态（非常罕见的需求），应使用Redis键。
