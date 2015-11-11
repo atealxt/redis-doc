@@ -360,24 +360,16 @@ puts r.eval(RandomPushScript,1,:mylist,10,rand(2**32))
 
 这在个别场合中会比较有用：
 
-* When the script is slow to compute, but the effects can be summarized by
-a few write commands, it is a shame to re-compute the script on the slaves
-or when reloading the AOF. In this case to replicate just the effect of the
-script is much better.
-* When 脚本效果复制 is enabled, the controls about non
-deterministic functions are disabled. You can, for example, use the `TIME`
-or `SRANDMEMBER` commands inside your scripts freely at any place.
-* The Lua PRNG in this mode is seeded randomly at every call.
+* 当计算脚本很慢，但执行效果可以转为少量写命令时，不值得再在从服务上或在重新加载AOF时重新计算脚本。
+这种情况下复制脚本效果将会好得多。
+* 脚本效果复制，不会尝试控制那些无法确认的函数。比如可以自由在脚本的任何地方使用 `TIME` 或 `SRANDMEMBER` 命令。
+* 在此模式中，每次调用时Lua PRNG的种子值随机。
 
-In order to enable 脚本效果复制, you need to issue the
-following Lua command before any write operated by the script:
+为了开启脚本效果复制，需要在执行脚本中的任何写操作前执行以下Lua命令：
 
     redis.replicate_commands();
 
-The function returns true if the 脚本效果复制 was enabled,
-otherwise if the function was called after the script already called
-some write command, it returns false, and normal whole script replication
-is used.
+如果成功启用了脚本效果复制，方法返回true；否则如果之前脚本已调用了某些写命令，则返回false，继续使用全量脚本复制。
 
 ## Selective replication of commands
 
