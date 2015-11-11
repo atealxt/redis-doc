@@ -371,24 +371,16 @@ puts r.eval(RandomPushScript,1,:mylist,10,rand(2**32))
 
 如果成功启用了脚本效果复制，方法返回true；否则如果之前脚本已调用了某些写命令，则返回false，继续使用全量脚本复制。
 
-## Selective replication of commands
+## 选择性复制命令
 
-When 脚本效果复制 is selected (see the previous section), it
-is possible to have more control in the way commands are replicated to slaves
-and AOF. This is a very advanced feature since **a misuse can do damage** by
-breaking the contract that the master, slaves, and AOF, all must contain the
-same logical content.
+当开启了脚本效果复制后（见上一章节），可以更进一步地使用命令控制从服务和AOF的复制。
+这是一个非常高级的特性，所谓 **过为已甚** ，不当使用可能会打破主从服务以及AOF的强一致逻辑性。
 
-However this is a useful feature since, sometimes, we need to execute certain
-commands only in the master in order to create, for example, intermediate
-values.
+而有时它却很有用，比如只在主服务上执行一些确定的命令创建临时数据。
 
-Think at a Lua script where we perform an intersection between two sets.
-Pick five random elements, and create a new set with this five random
-elements. Finally we delete the temporary key representing the intersection
-between the two original sets. What we want to replicate is only the creation
-of the new set with the five elements. It's not useful to also replicate the
-commands creating the temporary key.
+假设有一个选取两个集合交集的Lua脚本。
+从交集中随机选择五个元素建立一个新的集合，最后通过键删除交集集合这个临时数据。
+在这里只想复制的是这个有着五个元素的新集合，不需要复制那个临时交集。
 
 For this reason, Redis 3.2 introduces a new command that only works when
 脚本效果复制 is enabled, and is able to control the scripting
