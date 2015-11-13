@@ -382,33 +382,29 @@ puts r.eval(RandomPushScript,1,:mylist,10,rand(2**32))
 从交集中随机选择五个元素建立一个新的集合，最后通过键删除交集集合这个临时数据。
 在这里只想复制的是这个有着五个元素的新集合，不需要复制那个临时交集。
 
-For this reason, Redis 3.2 introduces a new command that only works when
-脚本效果复制 is enabled, and is able to control the scripting
-replication engine. The command is called `redis.set_repl()` and fails raising
-an error if called when 脚本效果复制 is disabled.
+因此，Redis 3.2 引入了一个只针对开启脚本效果复制的新命令，可以控制脚本复制引擎。
+命令叫做 `redis.set_repl()` ，在关闭了脚本效果复制的情况下调用会发生错误。
 
-The command can be called with four different arguments:
+命令可以用四种不同的参数调用：
 
-    redis.set_repl(redis.REPL_ALL); -- Replicte to AOF and slaves.
-    redis.set_repl(redis.REPL_AOF); -- Replicte only to AOF.
-    redis.set_repl(redis.REPL_SLAVE); -- Replicte only to slaves.
-    redis.set_repl(redis.REPL_NONE); -- Don't replicate at all.
+    redis.set_repl(redis.REPL_ALL); -- 复制到AOF和从服务。
+    redis.set_repl(redis.REPL_AOF); -- 只复制到AOF。
+    redis.set_repl(redis.REPL_SLAVE); -- 只复制从服务。
+    redis.set_repl(redis.REPL_NONE); -- 不进行复制。
 
-By default the scripting engine is always set to `REPL_ALL`. By calling
-this function the user can switch on/off AOF and or slaves replication, and
-turn them back later at her/his wish.
+脚本的默认参数是 `REPL_ALL` 。
+通过调用此函数，用户可以开启/关闭AOF和从服务的复制，并随时修改回原来的设置。
 
-A simple example follows:
+一个简单的例子：
 
-    redis.replicate_commands(); -- Enable effects replication.
+    redis.replicate_commands(); -- 启用脚本效果复制。
     redis.call('set','A','1');
     redis.set_repl(redis.REPL_NONE);
     redis.call('set','B','2');
     redis.set_repl(redis.REPL_ALL);
     redis.call('set','C','3');
 
-After running the above script, the result is that only keys A and C
-will be created on slaves and AOF.
+执行以上脚本，只有键A和C会在从服务和AOF中得到创建。
 
 ## 保护全局变量
 
