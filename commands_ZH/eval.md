@@ -446,7 +446,8 @@ Redis的Lua解释器装载了以下Lua函数库：
 * `cjson` lib.
 * `cmsgpack` lib.
 * `bitop` lib.
-* `redis.sha1hex` function.
+* `redis.sha1hex` 方法。
+* `redis.breakpoint 和 redis.debug` 方法，见 [Redis Lua 调试器](/topics/ldb)。
 
 每个Redis实例都 _保证_ 包含上面所有的函数库，所以可以确定的是所有的Redis脚本都具有相同的环境。
 
@@ -613,3 +614,10 @@ redis.log(redis.LOG_WARNING,"Something is wrong with this script.")
 
 *   首先收集所有需要在管道中执行的命令，找到其中所有的 `EVAL` 命令并使用 `SCRIPT EXISTS` 验证其是否已定义。
     如果没有，在管道最初端添加所需的 `SCRIPT LOAD` 命令，再使用 `EVALSHA` 代替所有的 `EVAL` 命令。
+
+## 调试Lua脚本
+
+从Redis3.2（目前为beta测试版）开始，Redis支持原生Lua调试。
+Redis Lua调试器是一个远程调试器，由Redis服务器端与客户端组成。客户端默认是 `redis-cli` 。
+
+关于Lua调试器的详细信息请见 [调试Lua脚本](/topics/ldb) 。
