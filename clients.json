@@ -53,7 +53,14 @@
     "recommended": true,
     "active": true
   },
-
+  {
+    "name": "eredis_cluster",
+    "language": "Erlang",
+    "repository": "https://github.com/adrienmo/eredis_cluster",
+    "description": "Eredis wrapper providing cluster support and connection pooling",
+    "authors": ["adrienmo"],
+    "active": true
+  },
   {
     "name": "sharded_eredis",
     "language": "Erlang",
@@ -283,6 +290,15 @@
     "repository": "https://github.com/agladysh/lua-hiredis",
     "description": "Lua bindings for the hiredis library",
     "authors": ["agladysh"],
+    "active": true
+  },
+
+  {
+    "name": "lredis",
+    "language": "Lua",
+    "repository": "https://github.com/daurnimator/lredis",
+    "description": "Redis library for Lua",
+    "authors": ["daurnimator"],
     "active": true
   },
 
