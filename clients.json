@@ -19,14 +19,6 @@
     "active": true
   },
   {
-    "name": "aleph",
-    "language": "Clojure",
-    "repository": "https://github.com/ztellman/aleph",
-    "description": "Redis client build on top of lamina",
-    "authors": ["ztellman"],
-    "active": true
-  },
-  {
     "name": "CL-Redis",
     "language": "Common Lisp",
     "url": "http://www.cliki.net/cl-redis",
@@ -1311,6 +1303,15 @@
     "repository": "https://github.com/cylix/cpp_redis",
     "description": "Modern C++11 Redis client based on boost::asio",
     "authors": ["simon_ninon"],
+    "active": true
+  },
+  
+  {
+    "name": "mruby-redis",
+    "language": "mruby",
+    "repository": "https://github.com/matsumoto-r/mruby-redis",
+    "description": "Redis class for mruby based on Hiredis",
+    "authors": ["matsumotory"],
     "active": true
   }
 ]
