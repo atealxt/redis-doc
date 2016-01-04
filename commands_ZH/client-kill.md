@@ -13,9 +13,9 @@ Redis从 2.8.12 开始，命令接受新的格式：
 可用属性包括：
 
 * `CLIENT KILL ADDR ip:port` 。这和旧的三个参数的版本行为相同。 
-* `CLIENT KILL ID client-id`. Allows to kill a client by its unique `ID` field, which was introduced in the `CLIENT LIST` command starting from Redis 2.8.12.
+* `CLIENT KILL ID client-id` 。允许通过 `ID` 字段关闭客户端，由 Redis 2.8.12 的 `CLIENT LIST` 命令引入。
 * `CLIENT KILL ID client-id` 。根据表示唯一性的字段 `ID` 关闭客户端，自Redis 2.8.12 引入， `CLIENT LIST` 命令也是。
-* `CLIENT KILL TYPE type` ， *type* 取值为 `normal` 、 `slave` 或 `pubsub` 。 
+* `CLIENT KILL TYPE type` ， *type* 取值为 `normal` 、 `master` 、 `slave` 或 `pubsub` （ `master` 自 v3.2 开始可用)。 
 关闭指定类型的 **所有客户端** 连接。 
 注意正在执行 `MONITOR` 命令的客户端类型为 `normal` 。
 * `CLIENT KILL SKIPME yes/no` 。 
