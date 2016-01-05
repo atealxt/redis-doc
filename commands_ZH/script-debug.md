@@ -1,23 +1,16 @@
-Set the debug mode for subsequent scripts executed with `EVAL`. Redis includes a
-complete Lua debugger, codename LDB, that can be used to make the task of
-writing complex scripts much simpler. In debug mode Redis acts as a remote
-debugging server and a client, such as `redis-cli`, can execute scripts step by
-step, set breakpoints, inspect variables and more - for additional information
-about LDB refer to the [Redis Lua debugger](/topics/ldb) page.
+为随后 `EVAL` 执行的脚本启用调试模式。
+Redis包含了一个完整的Lua调试器，代号为LDB，可以让编写复杂脚本变得简单得多。
+在调试模式中Redis扮演了一个远程调试服务器和一个客户端，比如 `redis-cli` 。可以按步执行脚本、设置断点、查看变量及更多——其他关于LDB的内容请参见 [Redis Lua调试器](/topics/ldb) 。
 
-**Important note:** avoid debugging Lua scripts using your Redis production
-server. Use a development server instead.
+**重要提示：** 避免在Redis生产环境中使用Lua脚本调试，请使用开发机操作。
 
-LDB can be enabled in one of two modes: asynchronous or synchronous. In
-asynchronous mode the server creates a forked debugging session that does not
-block and all changes to the data are **rolled back** after the session
-finishes, so debugging can be restarted using the same initial state. The
-alternative synchronous debug mode blocks the server while the debugging session
-is active and retains all changes to the data set once it ends.
+LDB有两种启用模式：异步或同步。
+异步模式中，服务器会创建分支调试会话，不会阻塞主线程，且会话结束后所有数据集的修改都将会 **回滚** 。所以可以使用相同的初始状态重复调试。
+而同步模式则会在调试会话激活时阻塞住服务器，并在会话结束后保留所有数据集的修改。
 
-* `YES`. Enable non-blocking asynchronous debugging of Lua scripts (changes are discarded).
-* `SYNC`. Enable blocking synchronous debugging of Lua scripts (saves changes to data).
-* `NO`. Disables scripts debug mode.
+* `YES`. 启用非阻塞异步调试Lua脚本（修改将会被丢弃）。
+* `SYNC`. 启用阻塞同步调试Lua脚本（保留数据修改）。
+* `NO`. 禁用脚本调试。
 
 @return
 
