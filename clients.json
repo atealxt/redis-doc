@@ -924,6 +924,13 @@
   },
 
   {
+    "name": "redis-client",
+    "language": "Rust",
+    "repository": "https://github.com/AsoSunag/redis-client",
+    "description": "A Redis client library for Rust."
+  },
+
+  {
     "name": "redic",
     "language": "Ruby",
     "repository": "https://github.com/amakawa/redic",
@@ -1291,8 +1298,9 @@
   {
     "name": "xredis",
     "language": "C++",
+    "url": "http://xredis.0xsky.com/",
     "repository": "https://github.com/0xsky/xredis",
-    "description": "Redis C++ client with data slice storage and connection pool support, requires hiredis only",
+    "description": "Redis C++ client with data slice storage, connection pool, master slave connection, read/write separation; requires hiredis only",
     "authors": ["0xsky"],
     "active": true
   },
@@ -1312,6 +1320,24 @@
     "repository": "https://github.com/matsumoto-r/mruby-redis",
     "description": "Redis class for mruby based on Hiredis",
     "authors": ["matsumotory"],
+    "active": true
+  },
+
+  {
+    "name": "Pottery",
+    "language": "Python",
+    "repository": "https://github.com/brainix/pottery",
+    "description": "High level Pythonic dict, set, and list like containers around Redis data types (Python 3 only)",
+    "authors": ["brainix"],
+    "active": true
+  },
+
+  {
+    "name": "cheprasov/php-redis-client",
+    "language": "PHP",
+    "repository": "https://github.com/cheprasov/php-redis-client",
+    "description": "Fast, fully-functional and user-friendly client, optimized for performance.",
+    "authors": ["cheprasov84"],
     "active": true
   }
 ]
