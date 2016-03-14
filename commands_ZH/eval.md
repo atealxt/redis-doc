@@ -367,7 +367,7 @@ puts r.eval(RandomPushScript,1,:mylist,10,rand(2**32))
 
 为了开启脚本效果复制，需要在执行脚本中的任何写操作前执行以下Lua命令：
 
-    redis.replicate_commands();
+    redis.replicate_commands()
 
 如果成功启用了脚本效果复制，方法返回true；否则如果之前脚本已调用了某些写命令，则返回false，继续使用全量脚本复制。
 
@@ -387,22 +387,22 @@ puts r.eval(RandomPushScript,1,:mylist,10,rand(2**32))
 
 命令可以用四种不同的参数调用：
 
-    redis.set_repl(redis.REPL_ALL); -- 复制到AOF和从服务。
-    redis.set_repl(redis.REPL_AOF); -- 只复制到AOF。
-    redis.set_repl(redis.REPL_SLAVE); -- 只复制从服务。
-    redis.set_repl(redis.REPL_NONE); -- 不进行复制。
+    redis.set_repl(redis.REPL_ALL) -- 复制到AOF和从服务。
+    redis.set_repl(redis.REPL_AOF) -- 只复制到AOF。
+    redis.set_repl(redis.REPL_SLAVE) -- 只复制从服务。
+    redis.set_repl(redis.REPL_NONE) -- 不进行复制。
 
 脚本的默认参数是 `REPL_ALL` 。
 通过调用此函数，用户可以开启/关闭AOF和从服务的复制，并随时修改回原来的设置。
 
 一个简单的例子：
 
-    redis.replicate_commands(); -- 启用脚本效果复制。
-    redis.call('set','A','1');
-    redis.set_repl(redis.REPL_NONE);
-    redis.call('set','B','2');
-    redis.set_repl(redis.REPL_ALL);
-    redis.call('set','C','3');
+    redis.replicate_commands() -- 启用脚本效果复制。
+    redis.call('set','A','1')
+    redis.set_repl(redis.REPL_NONE)
+    redis.call('set','B','2')
+    redis.set_repl(redis.REPL_ALL)
+    redis.call('set','C','3')
 
 执行以上脚本，只有键A和C会在从服务和AOF中得到创建。
 

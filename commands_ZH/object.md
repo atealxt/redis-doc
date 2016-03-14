@@ -17,8 +17,8 @@
    `ziplist` 是一种用来为较小列表节省空间的特殊编码。
 * 集合可以编码为 `intset` 或 `hashtable` 。
    `intset` 是一种为仅以整数组成的较小集合而设的特殊编码。
-* 散列表可以编码为 `zipmap` 或 `hashtable` 。
-   `zipmap` 是一为较小散列表而设的特殊编码。
+* 散列表可以编码为 `ziplist` 或 `hashtable` 。
+   `ziplist` 是一为较小散列表而设的特殊编码。
 * 有序集合可以编码为 `ziplist` 或 `skiplist` 。
   较小的有序集合可以像列表一样使用 `ziplist` 这种特殊编码，而 `skiplist` 编码则可用于任何大小的有序集合。
 
