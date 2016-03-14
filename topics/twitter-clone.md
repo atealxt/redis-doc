@@ -158,7 +158,7 @@ collection of fields associated with values:
 
 `HMSET` can be used to set fields in the hash, that can be retrieved with
 `HGET` later. It is possible to check if a field exists with `HEXISTS`, or
-to increment an hash field with `HINCRBY` and so forth.
+to increment a hash field with `HINCRBY` and so forth.
 
 Hashes are the ideal data structure to represent *objects*. For example we
 use Hashes in order to represent Users and Updates in our Twitter clone.
@@ -183,11 +183,11 @@ Let's start with Users. We need to represent users, of course, with their userna
     INCR next_user_id => 1000
     HMSET user:1000 username antirez password p1pp0
 
-*Note: you should use an hashed password in a real application, for simplicity
+*Note: you should use a hashed password in a real application, for simplicity
 we store the password in clear text.*
 
-We use the `next_user_id` key in order to always get an unique ID for every new user. Then we use this unique ID to name the key holding an Hash with user's data. *This is a common design pattern* with key-values stores! Keep it in mind.
-Besides the fields already defined, we need some more stuff in order to fully define a User. For example, sometimes it can be useful to be able to get the user ID from the username, so every time we add an user, we also populate the `users` key, which is an Hash, with the username as field, and its ID as value.
+We use the `next_user_id` key in order to always get an unique ID for every new user. Then we use this unique ID to name the key holding a Hash with user's data. *This is a common design pattern* with key-values stores! Keep it in mind.
+Besides the fields already defined, we need some more stuff in order to fully define a User. For example, sometimes it can be useful to be able to get the user ID from the username, so every time we add an user, we also populate the `users` key, which is a Hash, with the username as field, and its ID as value.
 
     HSET users antirez 1000
 
@@ -235,7 +235,7 @@ an `auth` field in its Hash:
     HSET user:1000 auth fea5e81ac8ca77622bed1c2132a021f9
 
 Moreover, we need a way to map authentication secrets to user IDs, so
-we also take an `auths` key, which has as value an Hash type mapping
+we also take an `auths` key, which has as value a Hash type mapping
 authentication secrets to user IDs.
 
     HSET auths fea5e81ac8ca77622bed1c2132a021f9 1000
@@ -339,7 +339,7 @@ Updates, also known as posts, are even simpler. In order to create a new post in
     INCR next_post_id => 10343
     HMSET post:10343 user_id $owner_id time $time body "I'm having fun with Retwis"
 
-As you can see each post is just represented by an Hash with three fields. The ID of the user owning the post, the time at which the post was published, and finally the body of the post, which is, the actual status message.
+As you can see each post is just represented by a Hash with three fields. The ID of the user owning the post, the time at which the post was published, and finally the body of the post, which is, the actual status message.
 
 After we create a post and we obtain the post ID, we need to LPUSH the ID in the timeline of every user that is following the author of the post, and of course in the list of posts of the author itself (everybody is virtually following herself/himself). This is the file `post.php` that shows how this is performed:
 
@@ -369,7 +369,7 @@ After we create a post and we obtain the post ID, we need to LPUSH the ID in the
 
 The core of the function is the `foreach` loop. We use `ZRANGE` to get all the followers of the current user, then the loop will LPUSH the push the post in every follower timeline List.
 
-Note that we also maintain a global timeline for all the posts, so that in the Retwis home page we can show everybody's updates easily. This requires just doing an `LPUSH` to the `timeline` List. Let's face it, aren't you start thinking it was a bit strange to have to sort things added in chronological order using `ORDER BY` with SQL? I think so.
+Note that we also maintain a global timeline for all the posts, so that in the Retwis home page we can show everybody's updates easily. This requires just doing an `LPUSH` to the `timeline` List. Let's face it, aren't you starting to think it was a bit strange to have to sort things added in chronological order using `ORDER BY` with SQL? I think so.
 
 There is an interesting thing to notice in the code above: we use a new
 command called `LTRIM` after we perform the `LPUSH` operation in the global
@@ -421,7 +421,7 @@ instead.*
 Following users
 ---
 
-It is not hard, but we did not yet checked how we create following / follower relationships. If user ID 1000 (antirez) wants to follow user ID 5000 (pippo), we need to create both a following and a follower relationship. We just need to `ZADD` calls:
+It is not hard, but we did not yet check how we create following / follower relationships. If user ID 1000 (antirez) wants to follow user ID 5000 (pippo), we need to create both a following and a follower relationship. We just need to `ZADD` calls:
 
         ZADD following:1000 5000
         ZADD followers:5000 1000
