@@ -1239,10 +1239,10 @@
   },
 
  {
-    "name": "ZRedis",
+    "name": "Redis",
     "language": "Swift",
-    "repository": "https://github.com/rabc/ZRedis",
-    "description": "Redis client for (pure) Swift",
+    "repository": "https://github.com/Zewo/Redis",
+    "description": "Redis client for Swift",
     "authors": ["rabc"],
     "active": true
   },
@@ -1353,5 +1353,22 @@
     "description": "A Delphi Redis Client",
     "authors": ["danieleteti"],
     "active": true
+  },
+  
+  {
+    "name": "eredis",
+    "language": "C",
+    "repository": "https://github.com/EulerianTechnologies/eredis",
+    "description": "Fast and light Redis C client library extending Hiredis: thread-safe, write replication, auto-reconnect, sync pool, async libev",
+    "authors": ["EulerianTech"],
+    "active": true
+  },
+
+  {
+    "name": "Hierdis",
+    "language": "Erlang",
+    "repository": "https://github.com/funbox/hierdis",
+    "description": "High-performance Erlang client for the Redis key-value store (NIF wrapping the hiredis C client).",
+    "authors": ["funbox_team"]
   }
 ]
