@@ -14,6 +14,7 @@ Redis包含了 `redis-benchmark` ，一个模拟N个客户端同时发送M个执
     -c <clients>       并行连接数（默认 50）
     -n <requests>      请求总数（默认 100000）
     -d <size>          SET/GET值的字节数据大小（默认 2）
+    --dbnum <db>       选定指定编号的数据库（默认0）
     -k <boolean>       1=保持连接 0=重连接（默认 1）
     -r <keyspacelen>   使用随机键进行SET/GET/INCR，随机值进行SADD。使用此选项基准程序将用一个范围从0到keyspacelen-1的12位数字参数扩展字符串 __rand_int__ 。每次执行命令此值都将变化。默认的测试用它在指定范围内创建随机键。
     -P <numreq>        并行 <numreq> 请求数. 默认 1（无并行）.
