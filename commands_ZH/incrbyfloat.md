@@ -1,4 +1,5 @@
 让储存在 `键` 中表示浮点数的字符串递增 `自增数` 指定的值。
+如果 `increment` 值为负数，值结果将自减。
 如果键不存在，在执行操作前将其置为 `0` 。
 发生以下情形将返回错误：
 
@@ -21,6 +22,7 @@
 ```cli
 SET mykey 10.50
 INCRBYFLOAT mykey 0.1
+INCRBYFLOAT mykey -5
 SET mykey 5.0e3
 INCRBYFLOAT mykey 2.0e2
 ```

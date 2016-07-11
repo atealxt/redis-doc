@@ -44,3 +44,39 @@ ZRANGEBYSCORE myzset 1 2
 ZRANGEBYSCORE myzset (1 2
 ZRANGEBYSCORE myzset (1 (2
 ```
+
+## 模式：元素的加权随机选择
+
+通常 `ZRANGEBYSCORE` 拿来用于取得范围内的元素，分数作为其整数索引键。
+
+而它也可以用来做一些其他的事，一些常见的问题比如实现马尔可夫链或其他需要从一个集合中随机选择元素，但不同元素有着不同的选择可能性权重的算法。
+
+使用此命令实现这样一个算法：
+
+假设你有元素A、B和C，权重分别是1、2和3。
+权重和为1+2+3 = 6。
+
+使用这个算法将所有元素加到有序集合中：
+
+```
+SUM = ELEMENTS.TOTAL_WEIGHT // 在这里值是6。
+SCORE = 0
+FOREACH ELE in ELEMENTS
+    SCORE += ELE.weight / SUM
+    ZADD KEY SCORE ELE
+END
+```
+
+结果集合为：
+
+```
+A的分数为0.16
+B的分数为.5
+C的分数为1
+```
+
+由于计算是取近似值，为了避免C的值不是1而是比如0.998，这里修改了算法，确保最后一个分数为1（具体实现留给读者作为练习。。。）。
+
+这样，想要取得加权随机元素，每次只需要计算一个0到1之间的随机数（比如大多数语言的 `rand()` ），如：
+
+    RANDOM_ELE = ZRANGEBYSCORE key RAND() +inf LIMIT 0 1

@@ -1,4 +1,5 @@
 让存储在 `键` 的哈希表中 `字段` 的数进行指定浮点数 `自增数` 的自增操作。
+如果自增值为负数，将进行 **自减** 而不是自增。
 如果字段不存在则在操作进行前将其值设定成 `0` 。
 发生以下情形将返回错误：
 
@@ -16,6 +17,7 @@
 ```cli
 HSET mykey field 10.50
 HINCRBYFLOAT mykey field 0.1
+HINCRBYFLOAT mykey field -5
 HSET mykey field 5.0e3
 HINCRBYFLOAT mykey field 2.0e2
 ```

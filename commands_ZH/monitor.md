@@ -36,6 +36,10 @@ Connection closed by foreign host.
 
 在 `telnet` 中手动发送 `QUIT` 命令来停止执行 `MONITOR` 。
 
+## MONITOR不记录的命令
+
+出于安全考虑，某些特殊管理命令如 `CONFIG` 将不会输出。
+
 ## 执行 `MONITOR` 的开销
 
 由于 `MONITOR` 监控 **所有** 命令，使用它是有代价的。
