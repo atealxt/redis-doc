@@ -722,6 +722,24 @@
   },
 
   {
+    "name": "redis-fast-driver",
+    "language": "Node.js",
+    "repository": "https://github.com/h0x91b/redis-fast-driver",
+    "description": "Driver based on hiredis async lib, can do PUBSUB and MONITOR, simple and really fast, written with NaN so works fine with node >=0.8",
+    "authors": ["h0x91b"],
+    "active": true
+  },
+
+  {
+    "name": "fast-redis-cluster",
+    "language": "Node.js",
+    "repository": "https://github.com/h0x91b/fast-redis-cluster",
+    "description": "Simple and fast cluster driver with error handling, uses redis-fast-driver as main adapter and node_redis as backup for windows",
+    "authors": ["h0x91b"],
+    "active": true
+  },
+
+  {
     "name": "iodis",
     "language": "Io",
     "repository": "https://github.com/vangberg/iodis",
@@ -896,7 +914,8 @@
     "name": "redis-client",
     "language": "Rust",
     "repository": "https://github.com/AsoSunag/redis-client",
-    "description": "A Redis client library for Rust."
+    "description": "A Redis client library for Rust.",
+    "authors": []
   },
 
   {
@@ -938,8 +957,7 @@
   {
     "name": "redis",
     "language": "Nim",
-    "repository": "https://github.com/nim-lang/Nim/blob/devel/lib/pure/redis.nim",
-    "url": "http://nim-lang.org/docs/redis.html",
+    "repository": "https://github.com/nim-lang/redis",
     "description": "Redis client for Nim",
     "authors": [],
     "active": true
@@ -994,6 +1012,7 @@
     "language": "OCaml",
     "repository": "https://github.com/0xffea/ocaml-redis",
     "description": "Synchronous and asynchronous (via Lwt) Redis client library in OCaml. Provides implementation of cache and mutex helpers.",
+    "authors": [],
     "active": true
   },
   {
@@ -1009,7 +1028,8 @@
     "name": "finagle-redis",
     "language": "Scala",
     "repository": "https://github.com/twitter/finagle/tree/develop/finagle-redis",
-    "description": "Redis client based on Finagle"
+    "description": "Redis client based on Finagle",
+    "authors": []
   },
 
   {
@@ -1195,22 +1215,6 @@
   },
 
   {
-    "name": "redis-fast-driver",
-    "language": "Javascript",
-    "repository": "https://github.com/h0x91b/redis-fast-driver",
-    "description": "Driver based on hiredis async lib, can do PUBSUB and MONITOR, simple and really fast, written with NaN so works fine with node 0.8, 0.10 and 0.12",
-    "authors": []
-  },
-
-  {
-    "name": "fast-redis-cluster",
-    "language": "Javascript",
-    "repository": "https://github.com/h0x91b/fast-redis-cluster",
-    "description": "Simple and fast cluster driver with error handling, uses redis-fast-driver as main adapter and node_redis as backup for windows",
-    "authors": []
-  },
-
-  {
     "name": "Redis::Cluster",
     "language": "Perl",
     "url": "http://search.cpan.org/dist/Redis-Cluster/",
@@ -1354,7 +1358,7 @@
     "authors": ["danieleteti"],
     "active": true
   },
-  
+
   {
     "name": "eredis",
     "language": "C",
@@ -1371,7 +1375,7 @@
     "description": "High-performance Erlang client for the Redis key-value store (NIF wrapping the hiredis C client).",
     "authors": ["funbox_team"]
   },
-  
+
   {
     "name": "yoredis",
     "language": "Node.js",
@@ -1387,6 +1391,15 @@
     "repository": "https://github.com/redislabs/spark-redis",
     "description": "A connector between Apache Spark and Redis.",
     "authors": ["redislabs", "sunheehnus", "dvirsky"],
+    "active": true
+  },
+
+  {
+    "name": "r3c",
+    "language": "C++",
+    "repository": "https://github.com/eyjian/r3c",
+    "description": "A Redis Cluster C++ Client, based on hiredis and support standalone, it's easy to make and use, not depends on C++11 or later.",
+    "authors": ["eyjian"],
     "active": true
   }
 
