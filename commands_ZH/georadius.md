@@ -13,12 +13,12 @@ The command optionally returns additional information using the following option
 
 * `WITHDIST`: Also return the distance of the returned items from the specified center. The distance is returned in the same unit as the unit specified as the radius argument of the command.
 * `WITHCOORD`: Also return the longitude,latitude coordinates of the matching items.
-* `WITHASH`: Also return the raw geohash-encoded sorted set score of the item, in the form of a 52 bit unsigned integer. This is only useful for low level hacks or debugging and is otherwise of little interest for the general user.
+* `WITHHASH`: Also return the raw geohash-encoded sorted set score of the item, in the form of a 52 bit unsigned integer. This is only useful for low level hacks or debugging and is otherwise of little interest for the general user.
 
 The command default is to return unsorted items. Two different sorting methods can be invoked using the following two options:
 
-* `ASC`: Sort returned items from the nearest to the fairest, relative to the center.
-* `DESC`: Sort returned items from the fairest to the nearest, relative to the center.
+* `ASC`: Sort returned items from the nearest to the farthest, relative to the center.
+* `DESC`: Sort returned items from the farthest to the nearest, relative to the center.
 
 By default all the matching items are returned. It is possible to limit the results to the first N matching items by using the **COUNT `<count>`** option. However note that internally the command needs to perform an effort proportional to the number of items matching the specified area, so to query very large areas with a very small `COUNT` option may be slow even if just a few results are returned. On the other hand `COUNT` can be a very effective way to reduce bandwidth usage if normally just the first results are used.
 
