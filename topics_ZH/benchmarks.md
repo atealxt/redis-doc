@@ -358,6 +358,13 @@ Redis在有多于60000个连接的基准测试中，仍然能维持50000 q/s的�
     LPUSH: 104712.05 requests per second
     LPOP: 93722.59 requests per second
 
+# 其他Redis基准测试工具
+
+这里有一些第三方的Redis基准测试工具，关于工具的目标及功能等具体信息请查阅其文档。
+
+* [Redis Labs](https://twitter.com/RedisLabs) 的 [memtier_benchmark](https://github.com/redislabs/memtier_benchmark) 是一个NoSQL Redis和Memcache的生成访问及基准测试工具。
+* [Twitter](https://twitter.com/twitter) 的 [rpc-perf](https://github.com/twitter/rpc-perf) 是一个RPC服务基准测试工具，支持Redis和Memcache。
+* [Yahoo @Yahoo](https://twitter.com/Yahoo) 的 [YCSB](https://github.com/brianfrankcooper/YCSB) 是一个基准测试框架，支持很多数据库包括Redis。
 
 # 在经过了优化的高端服务器硬件下的基准测试结果例子
 
