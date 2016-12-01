@@ -1,4 +1,5 @@
 `EXPIREAT` 与 `EXPIRE` 有着相同的作用与语义，除了以绝对 [Unix时间戳][hewowu]（自1970年1月1日以来经过的秒数）取代指定TTL（生存时间）秒数。
+过去时间戳的键会被立即删除。
 
 [hewowu]: http://en.wikipedia.org/wiki/Unix_time
 

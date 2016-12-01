@@ -13,6 +13,11 @@ Redis常使用术语 _volatile_ 来描述设置了超时的键。
 
 如果使用 `RENAME` 重命名了键，例如一个已存在的键 `Key_A` 被诸如 `RENAME Key_B Key_A` 的命令重写，无论 `Key_A` 的源是否有超时设置，新键 `Key_A` 都会继承 `Key_B` 的所有特性。
 
+注意使用非正数的数字调用 `EXPIRE`/`PEXPIRE` 或过去时间调用 `EXPIREAT`/`PEXPIREAT` ，会导致键被[删除][del] ，而不是过期（键触发的[事件][ntf]是 `del` ，不是 `expired` ）。 
+
+[del]: /commands/del
+[ntf]: /topics/notifications
+
 ## 刷新有效期
 
 可以对已经设置了有效期的键调用 `EXPIRE` 。
