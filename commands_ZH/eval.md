@@ -55,7 +55,7 @@ Lua脚本可以有一个返回值，通过使用一组转换规则把Lua类型�
 
 ## Lua和Redis之间的数据类型转换
 
-当Lua使用call()或pcall()调用Redis命令时Redis的返回值被转换成了Lua的数据类型。
+当Lua使用 `call()` 或 `pcall()` 调用Redis命令时Redis的返回值被转换成了Lua的数据类型。
 类似当Lua脚本返回值时Lua数据类型被转换成了Redis的数据类型，这样一来脚本就可以将 `EVAL` 的执行结果返回给客户端。
 
 就这种数据类型转换的设计来说，如果Redis类型被转换成Lua类型后再被转换回Redis类型时，结果将与初始值相同。

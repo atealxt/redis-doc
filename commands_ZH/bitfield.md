@@ -51,11 +51,11 @@ you want is a plain array of integers of a given size.
 
 ## Overflow control
 
-Using the `OVERFLOW` command the user is able to fin-tune the behavior of
+Using the `OVERFLOW` command the user is able to fine-tune the behavior of
 the increment or decrement overflow (or underflow) by specifying one of
 the following behaviors:
 
-* **WRAP**: wrap around, both with signed and unsigned integers. In the case of unsigned integers to wrap is like to perform the operation modulo the maximum value the integer can contain (the C standard behavior). With signed integers instead the wrapping means that overflows restart towards the most negative value and underflows towards the most positive ones, so for example if an `i8` integer is set to the value 127, incrementing it by 1 will yield `-128`.
+* **WRAP**: wrap around, both with signed and unsigned integers. In the case of unsigned integers, wrapping is like performing the operation modulo the maximum value the integer can contain (the C standard behavior). With signed integers instead wrapping means that overflows restart towards the most negative value and underflows towards the most positive ones, so for example if an `i8` integer is set to the value 127, incrementing it by 1 will yield `-128`.
 * **SAT**: uses saturation arithmetic, that is, on underflows the value is set to the minimum integer value, and on overflows to the maximum integer value. For example incrementing an `i8` integer starting from value 120 with an increment of 10, will result into the value 127, and further increments will always keep the value at 127. The same happens on underflows, but towards the value is blocked at the most negative value.
 * **FAIL**: in this mode no operation is performed on overflows or underflows detected. The corresponding return value is set to NULL to signal the condition to the caller.
 
@@ -93,6 +93,8 @@ The following is an example of `OVERFLOW FAIL` returning NULL.
 
 The motivation for this command is that the ability to store many small integers
 as a single large bitmap (or segmented over a few keys to avoid having huge keys) is extremely memory efficient, and opens new use cases for Redis to be applied, especially in the field of real time analytics. This use cases are supported by the ability to specify the overflow in a controlled way.
+
+Fun fact: Reddit's 2017 April fools' project [r/place](https://reddit.com/r/place) was [built using the Redis BITFIELD command](https://redditblog.com/2017/04/13/how-we-built-rplace/) in order to take an in-memory representation of the collaborative canvas.
 
 ## Performance considerations
 

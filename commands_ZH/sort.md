@@ -109,4 +109,5 @@ SORT mylist BY weight_*->fieldname GET object_*->fieldname
 
 @return
 
-@array-reply: 排序后的元素列表。
+@array-reply: 没有 `store` 参数时，命令返回排序后的元素列表。
+@integer-reply: 有 `store` 参数时，命令返回目标列表的元素数量。
