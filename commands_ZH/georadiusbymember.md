@@ -4,6 +4,9 @@
 
 更多关于此命令和参数的信息请见下面的例子，并另请查阅 `GEORADIUS` 文档。
 
+注意从Redis 3.2.10 或 4.0.0 提供了 `GEORADIUSBYMEMBER_RO` 这一只读命令给从服务使用。 
+更多信息请见 `GEORADIUS` 文档。
+
 @examples
 
 ```cli

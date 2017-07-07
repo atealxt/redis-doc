@@ -106,16 +106,18 @@ Redis管道可以显著提高服务器的吞吐量。
 + Redis是一个内存数据存储应用，并有几个持久化选项。如果打算与具有事务处理功能的服务（MySQL、PostgreSQL等）进行比较，应考虑激活AOF并选择合适的fsync策略。
 + Redis的服务是单线程的。不是设计用于多核CPU的。对于多核，如果需要请运行若干个Redis实例进行扩展。把单实例Redis与多线程数据存储应用进行对比并不是很公平。
 
-一个普遍的误解是，redis-benchmark被设计用来让Redis的性能看起来美好，吞吐量是由redis-benchmark模拟出来的，在真实程序中则无法实现。这其实是完全错误的。
+一个普遍的误解是，redis-benchmark被设计用来让Redis的性能看起来美好，吞吐量是由redis-benchmark模拟出来的，在真实程序中则无法实现。这其实是错误的。
 
-redis-benchmark程序可以快速而有效的获取数据，估算Redis实例在指定硬件环境下的性能。
+`redis-benchmark` 程序可以快速而有效的获取数据，估算Redis实例在指定硬件环境下的性能。
 然而在默认条件下，这并不代表Redis实例所能承受的最大吞吐量。
 实际上，使用管道及速度快的客户端（hiredis），可以轻松的编写出吞吐量比redis-benchmark更高的程序。
 redis-benchmark的默认行为是只通过利用并发性来检验吞吐量（也就是创建多个至服务端的链接）。
-没有使用管道或任何并行（一个连接最多同时执行一个查询，没有多线程）。
+如果没有通过 `-P` 参数启用，将不会使用管道或任何并行（一个连接最多同时执行一个查询，没有多线程）。
+所以可以在手工执行一个后台 `BGSAVE` 操作时使用 `redis-benchmark` ，提供给用户更加 *真实* 的数据。
 
 欲使用管道模式运行基准程序（实现更高的吞吐量），需要显式使用-P选项。
-请注意这仍然是可行的，很多基于Redis的程序都积极使用管道来提高性能。
+这是值得测试的，很多基于Redis的程序都积极使用管道来提高性能。
+但需要注意尽量使用接近平均值的管道长度，以获得较真实的数据。
 
 最后，基准程序应该与其他数据存储应用在相同的工作环境中比较相同的操作。把redis-benchmark与其他的基准程序做比较完全没有意义。
 
@@ -193,7 +195,7 @@ Redis在有多于60000个连接的基准测试中，仍然能维持50000 q/s的�
 [这里](https://groups.google.com/forum/#!msg/redis-db/gUhc19gnYgc/BruTPCOroiMJ).
 在有大对象的场合中使用巨型帧技术也可以使性能得到提升。
 + 根据平台的不同，Redis可以被编译出不一样的内存分配器（libc malloc，jemalloc或tcmalloc），可能在速度、内外部碎片上的行为表现中存在差异。
-如果不是手动编译的Redis，可以使用INFO命令查看mem_allocator字段。
+如果不是手动编译的Redis，可以使用INFO命令查看 `mem_allocator` 字段。
 请注意大多数基准测试的运行时间都不够长，不足以产生显着的外部碎片（与生产环境的Redis实例相反）。
 
 其他需要考虑的事
@@ -208,7 +210,7 @@ Redis在有多于60000个连接的基准测试中，仍然能维持50000 q/s的�
 为了得到可以重现的结果，最好将所有CPU核的频率尽可能调高以进行基准测试。
 + 估算运行基准程序时的系统开销很重要。
 系统必须要有足够的内存，不能发生swap。
-在Linux上，不要忘了正确设置参数overcommit_memory。
+在Linux上，不要忘了设置正确的 `overcommit_memory` 参数。
 请注意32位和64位的Redis实例内存占用是不同的。
 + 如果打算在基准测试中使用RDB或AOF，请确认系统中没有其他I/O操作。
 避免将RDB或AOF文件存入NAS或NFS文件系统，以及其他影响网络带宽及/或延迟的设备（例如Amazon EC2的EBS）。
@@ -216,13 +218,16 @@ Redis在有多于60000个连接的基准测试中，仍然能维持50000 q/s的�
 + 避免使用有可能改变基准测试结果的监控工具。
 例如使用INFO定期收集统计数据很可能没有问题，但使用MONITOR将会显著影响性能测试的精确性。
 
-# Benchmark results on different virtualized and bare metal servers.
+# 在各种虚拟机服务器上的测试结果。
 
-* The test was done with 50 simultaneous clients performing 2 million requests.
-* Redis 2.6.14 is used for all the tests.
-* Test executed using the loopback interface.
-* Test executed using a key space of 1 million keys.
-* Test executed with and without pipelining (16 commands pipeline).
+注意：以下测试已经是几年前在旧硬件上执行的了，这部分需要更新。你可以认为如今的执行结果能够达到两倍效果。
+并且，Redis 4.0的性能已经在很多地方超过了2.6。
+
+* 50个并发客户端执行两百万个请求。
+* 使用Redis 2.6.14 。
+* 使用loopback接口。
+* 使用一百万个键。
+* 16个命令使用管道，其余命令不使用管道。
 
 **Intel(R) Xeon(R) CPU E5520  @ 2.27GHz (使用流水线)**
 
