@@ -93,7 +93,7 @@ Each top-level result contains six nested results.  Each nested result is:
 ```
 
 Redis有些命令的键位置不可预知。针对这些命令，将会返回标识 `movablekeys` 。
-Redis集群的客户端需要对这些标识为 `movabkeleys` 的命令进行手动解析，寻找所有相关键的位置。
+Redis集群的客户端需要对这些标识为 `movablekeys` 的命令进行手动解析，寻找所有相关键的位置。
 
 目前所有需要手动寻找键的命令有：
 
